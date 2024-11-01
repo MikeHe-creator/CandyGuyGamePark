@@ -66,14 +66,19 @@ function GameSet(inforRecord) {
     } else if (difficultyT === "Hard(20*20)") {
         n = 20;
     }
+
     const img = new Image();
     img.src = IMGsrc;
 
     img.onload = () => {
-        const imgWidth = img.width;
-        const imgHeight = img.height;
-        const eachWidth = gameScreen.getBoundingClientRect().width*0.25;
-        const eachHeight = gameScreen.getBoundingClientRect().height*0.25;
+        // 获取 gameScreen 容器的宽高
+        const containerWidth = gameScreen.getBoundingClientRect().width;
+        const containerHeight = gameScreen.getBoundingClientRect().height;
+
+        // 根据 n 值计算每个拼图块的宽高，使它们充满整个 gameScreen 容器
+        const eachWidth = containerWidth / n;
+        console.log("eachWidth",eachWidth)
+        const eachHeight = containerHeight / n;
         let RandomWeizi = [];
         for (let i = 0; i < n; i++) {
             const weizi = i * eachWidth;
@@ -87,17 +92,18 @@ function GameSet(inforRecord) {
                 canvas.height = eachHeight;
                 const context = canvas.getContext('2d');
                 if (context) {
-                    context.drawImage(img, j * (imgWidth / n), i * (imgHeight / n), imgWidth / n, imgHeight / n, 0, 0, eachWidth, eachHeight);
+                    // 按照 gameScreen 的尺寸缩放图像
+                    context.drawImage(img, j * (img.width / n), i * (img.height / n), img.width / n, img.height / n, 0, 0, eachWidth, eachHeight);
                     const imgPiece = new Image();
                     imgPiece.src = canvas.toDataURL();
                     imgPiece.classList.add('piece');
-                    imgPiece.dataset.pipei=`(${j*eachWidth},${i*eachHeight})`;
+                    imgPiece.dataset.pipei = `(${j * eachWidth},${i * eachHeight})`;
                     RandomPut(imgPiece, RandomWeizi);
                     gameScreen.appendChild(imgPiece);
                 }
             }
         }
-        LastStepToset(gameScreen,eachWidth,eachHeight,n);
+        LastStepToset(gameScreen, eachWidth, eachHeight, n);
     };
 }
 
@@ -135,21 +141,25 @@ function LastStepToset(gameScreen,eachWidth,eachHeight,n){
     paragraph.textContent = "Please move the pictures to the blank area until all pictures are in the correct area to win.";
     jishi()
 
-    gameScreen.addEventListener("click", (event)=>{
+    gameScreen.addEventListener("click", (event) => {
         if (isPaused) return;
-        const targetE=event.target;
+        const targetE = event.target;
         const targetML = parseInt(getComputedStyle(targetE).marginLeft, 10);
         const targetMT = parseInt(getComputedStyle(targetE).marginTop, 10);
-        if(targetMT === kongdangMT && Math.abs(targetML - kongdangML) === eachWidth){
+
+        // 取整比较，避免小数误差
+        console.log("targetML - kongdangML",targetML - kongdangML)
+        console.log("targetMT - kongdangMT",targetMT - kongdangMT);
+        const tolerance = 1;
+        if (targetMT === kongdangMT && Math.abs(Math.abs(targetML - kongdangML) - eachWidth) <= tolerance) {
             targetE.style.marginLeft = `${kongdangML}px`;
             kongdangML = targetML;
-        }else if(targetML === kongdangML && Math.abs(targetMT - kongdangMT) === eachHeight){
+        } else if (targetML === kongdangML && Math.abs(Math.abs(targetMT - kongdangMT) - eachHeight) <= tolerance) {
             targetE.style.marginTop = `${kongdangMT}px`;
             kongdangMT = targetMT;
         }
-        checkAnswer(gameScreen,n)
+        checkAnswer(gameScreen, n);
     });
-
 }
 
 function checkAnswer(gameScreen,n) {
