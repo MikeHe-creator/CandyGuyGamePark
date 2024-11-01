@@ -149,7 +149,7 @@ function LastStepToset(gameScreen,eachWidth,eachHeight,n){
         }
         checkAnswer(gameScreen,n)
     });
-    checkAnswer(gameScreen, n);
+
 }
 
 function checkAnswer(gameScreen,n) {
