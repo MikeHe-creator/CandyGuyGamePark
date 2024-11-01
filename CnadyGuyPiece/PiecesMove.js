@@ -71,11 +71,9 @@ function GameSet(inforRecord) {
     img.src = IMGsrc;
 
     img.onload = () => {
-        // 获取 gameScreen 容器的宽高
         const containerWidth = gameScreen.getBoundingClientRect().width;
         const containerHeight = gameScreen.getBoundingClientRect().height;
 
-        // 根据 n 值计算每个拼图块的宽高，使它们充满整个 gameScreen 容器
         const eachWidth = containerWidth / n;
         console.log("eachWidth",eachWidth)
         const eachHeight = containerHeight / n;
@@ -92,7 +90,6 @@ function GameSet(inforRecord) {
                 canvas.height = eachHeight;
                 const context = canvas.getContext('2d');
                 if (context) {
-                    // 按照 gameScreen 的尺寸缩放图像
                     context.drawImage(img, j * (img.width / n), i * (img.height / n), img.width / n, img.height / n, 0, 0, eachWidth, eachHeight);
                     const imgPiece = new Image();
                     imgPiece.src = canvas.toDataURL();
@@ -114,7 +111,7 @@ function RandomPut(imgPiece, RandomWeizi) {
     do {
         x = RandomWeizi[Math.floor(Math.random() * RandomWeizi.length)];
         y = RandomWeizi[Math.floor(Math.random() * RandomWeizi.length)];
-    } while (RandomJilu.has(`${x},${y}`)); // 防止重复位置
+    } while (RandomJilu.has(`${x},${y}`));
     imgPiece.style.position = 'absolute';
     imgPiece.style.marginLeft = x + 'px';
     imgPiece.style.marginTop = y + 'px';
@@ -147,7 +144,6 @@ function LastStepToset(gameScreen,eachWidth,eachHeight,n){
         const targetML = parseInt(getComputedStyle(targetE).marginLeft, 10);
         const targetMT = parseInt(getComputedStyle(targetE).marginTop, 10);
 
-        // 取整比较，避免小数误差
         console.log("targetML - kongdangML",targetML - kongdangML)
         console.log("targetMT - kongdangMT",targetMT - kongdangMT);
         const tolerance = 1;
@@ -220,7 +216,7 @@ function jishi(){
             minutenum = 0;
             hournum++;
         }
-        second.textContent = secondnum.toString().padStart(2, "0"); // 显示两位数字
+        second.textContent = secondnum.toString().padStart(2, "0"); 
         minute.textContent = minutenum.toString().padStart(2, "0");
         hour.textContent = hournum.toString().padStart(2, "0");
     }, 1000);
@@ -228,7 +224,7 @@ function jishi(){
 
 function stop() {
     clearInterval(timerId);
-    timerId = null;  // 将 timerId 设为 null，确保可以重新启动
+    timerId = null;  
     isPaused = true;
     const gameScreen = document.getElementById("gameScreen");
     const pauseClickHandler = () => {
@@ -239,7 +235,7 @@ function stop() {
 }
 
 function KeepGoing() {
-    if (!timerId) {  // 仅在计时器未启动时重新启动
+    if (!timerId) {  
         jishi();
     }
     isPaused = false;
