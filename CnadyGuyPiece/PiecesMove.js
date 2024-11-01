@@ -135,21 +135,21 @@ function LastStepToset(gameScreen,eachWidth,eachHeight,n){
     paragraph.textContent = "Please move the pictures to the blank area until all pictures are in the correct area to win.";
     jishi()
 
-    gameScreen.addEventListener("click", (event)=>{
+    gameScreen.addEventListener("click", handlePieceMove);
+    gameScreen.addEventListener("touchend", handlePieceMove);
+    function handlePieceMove(event) {
         if (isPaused) return;
-        const targetE=event.target;
+        const targetE = event.targetTouches ? event.targetTouches[0].target : event.target;
         const targetML = parseInt(getComputedStyle(targetE).marginLeft, 10);
         const targetMT = parseInt(getComputedStyle(targetE).marginTop, 10);
-        if(targetMT === kongdangMT && Math.abs(targetML - kongdangML) === eachWidth){
+        if (targetMT === kongdangMT && Math.abs(targetML - kongdangML) === eachWidth) {
             targetE.style.marginLeft = `${kongdangML}px`;
             kongdangML = targetML;
-        }else if(targetML === kongdangML && Math.abs(targetMT - kongdangMT) === eachHeight){
+        } else if (targetML === kongdangML && Math.abs(targetMT - kongdangMT) === eachHeight) {
             targetE.style.marginTop = `${kongdangMT}px`;
             kongdangMT = targetMT;
         }
-        checkAnswer(gameScreen,n)
-    });
-
+    checkAnswer(gameScreen, n);
 }
 
 function checkAnswer(gameScreen,n) {
