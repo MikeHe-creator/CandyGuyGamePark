@@ -274,7 +274,7 @@ function BackHome(){
         pictures.style.display = "flex";
     }, 0);
 
-    // 清理计时器和其他游戏状态
+    // clean all data
     clearInterval(timerId);
     timerId = null;
     secondnum = 0;
@@ -286,6 +286,8 @@ function BackHome(){
     second.textContent = "00";
     minute.textContent = "00";
     hour.textContent = "00";
+    const picture04=document.getElementById('picture04');
+    picture04.innerHTML="";
     const gameScreen = document.getElementById("gameScreen");
     while (gameScreen.firstChild) {
         gameScreen.removeChild(gameScreen.firstChild);
